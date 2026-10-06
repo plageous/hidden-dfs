@@ -69,5 +69,38 @@ public class Traverse {
     v45.neighbors = new ArrayList<>(List.of(v23));
     v23.neighbors = new ArrayList<>(List.of());
     v67.neighbors = new ArrayList<>(List.of(v91));
+
+    printGossipers(grace);
+  }
+
+  public static void printGossipers(Person initial) {
+    Set<Person> visited = new HashSet<>();
+    printGossipers(initial, visited);
+  }
+
+  private static void printGossipers(Person current, Set<Person> visited) {
+    if (current == null || visited.contains(current)) return;
+    visited.add(current);
+    System.out.println(current.getName());
+    for (Person confidant : current.getConfidants()) {
+      printGossipers(confidant, visited);
+    }
+  }
+
+  public static int minReachable(Map<Integer, Set<Integer>> graph, int start) {
+    return minReachable(graph, start, new HashSet<>());
+  }
+
+  private static int minReachable(Map<Integer, Set<Integer>> graph, int current, Set<Integer> visited) {
+    if (graph == null)  throw new NullPointerException("Graph cannot be null.");
+
+    int min = current;
+
+    for (int neighbor : graph.get(current)) {
+      int minFromNeighbor = minReachable(graph, neighbor, visited);
+      if (neighbor < min) min = minFromNeighbor;
+      // min = neighbor DOES NOT WORK!!!
+    }
+    return min;
   }
 }
